@@ -17,9 +17,12 @@ import { Input } from "@/components/ui/input"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { LoaderCircleIcon } from "lucide-react"
 
 
 export function LoginForm() {
+
+  const [isLoading,setIsLoading] = useState(false)
 const router  = useRouter()
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -34,7 +37,8 @@ const router  = useRouter()
     try {
         const res = await axios.post("/api/v1/user/signIn",values,{withCredentials:true})
         console.log(res.data)
-        router.push("/")      
+        setIsLoading(prev=>!prev)
+        router.push("/dashboard")      
     } catch (error) {
     }
   }
@@ -89,7 +93,7 @@ const router  = useRouter()
       className="w-full max-w-xs md:max-w-md xl:max-w-xl mt-4 md:mt-6 bg-purple-600 rounded-4xl md:h-20 md:text-2xl"
       type="submit"
     >
-      Login
+     {isLoading?<LoaderCircleIcon className="w-6 h-6  animate-spin"/>:"Login"} 
     </Button>
   </form>
 </Form>

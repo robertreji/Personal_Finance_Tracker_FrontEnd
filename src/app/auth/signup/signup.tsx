@@ -16,9 +16,14 @@ import {
 import { Input } from "@/components/ui/input"
 import axios from "axios"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { Loader2 } from "lucide-react"
 
 
 export function SignUpForm() {
+
+  const [isLoading,setIsLoading] =useState(false)
+
 const router  = useRouter()
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -33,6 +38,7 @@ const router  = useRouter()
     try {
         const res = await axios.post("/api/v1/user/signUp",values,{withCredentials:true})
         console.log(res.data)
+        setIsLoading(prev=>!prev)
         router.push("/auth/login")
             
     } catch (error) {
@@ -110,7 +116,7 @@ const router  = useRouter()
       className="w-full max-w-xs md:max-w-md xl:max-w-xl mt-4 md:mt-6 bg-purple-600 rounded-4xl md:h-20 md:text-2xl"
       type="submit"
     >
-      Login
+      {isLoading?<Loader2 className="w-6 h-4 animate-spin mr-2"/> :"SignUp"}
     </Button>
   </form>
 </Form>
