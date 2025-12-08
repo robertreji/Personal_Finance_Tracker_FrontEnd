@@ -10,7 +10,7 @@ const router = useRouter()
       }
   return (
     <div className="min-h-screen w-screen bg-slate-950 flex items-center justify-center text-white ">
-        home page
+       <h1 className="text-4xl">dashnboard</h1>
         <button onClick={()=>(logOut())} className=" m-auto text-2xl ring-2 ring-white">logout</button>
     </div>
   );
