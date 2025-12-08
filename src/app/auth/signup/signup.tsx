@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import {loginSchema} from "./loginSchema"
+import {signUpSchema} from "./signupSchema"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -16,31 +16,32 @@ import {
 import { Input } from "@/components/ui/input"
 import axios from "axios"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
 
 
-export function LoginForm() {
+export function SignUpForm() {
 const router  = useRouter()
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       username: "",
       password:""
     },
   })
 
-  async function onSubmit(values: z.infer<typeof loginSchema>) {
+  async function onSubmit(values: z.infer<typeof signUpSchema>) {
 
     try {
-        const res = await axios.post("/api/v1/user/signIn",values,{withCredentials:true})
+        const res = await axios.post("/api/v1/user/signUp",values,{withCredentials:true})
         console.log(res.data)
-        router.push("/")      
+        router.push("/auth/login")
+            
     } catch (error) {
+      console.log(error)
     }
   }
+
   return (
 <Form {...form}>
-  
   <form
     onSubmit={form.handleSubmit(onSubmit)}
     className="w-full h-full flex flex-col items-center gap-4 pt-2 md:pt-6"
@@ -56,10 +57,30 @@ const router  = useRouter()
               className=" xl:h-20 rounded-4xl shadow-sm text-base md:text-2xl pl-2 md:pl-6 py-3"
               placeholder="@username"
               {...field}
-                
-             onChange={e=>{
-              field.onChange(e)
-              }}/>
+
+              onChange={e=>{
+              field.onChange(e);
+              }}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+
+    <FormField
+      control={form.control}
+      name="email"
+      render={({ field }) => (
+        <FormItem className="w-full max-w-xs xl:max-w-xl md:max-w-lg">
+          <FormLabel className="text-lg md:text-4xl text-gray-600">Email</FormLabel>
+          <FormControl>
+            <Input
+              type="email"
+              className="  xl:h-20  rounded-4xl shadow-sm text-base md:text-2xl pl-2 md:pl-6 py-3"
+              placeholder="email@gmail.com"
+              {...field}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -93,7 +114,6 @@ const router  = useRouter()
     </Button>
   </form>
 </Form>
-
   )
 }
 

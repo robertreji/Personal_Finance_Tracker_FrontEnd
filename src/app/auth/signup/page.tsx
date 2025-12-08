@@ -1,11 +1,6 @@
-import React from 'react'
+import { SignUpForm} from "./signup";
 
-function page() {
-  return (
-    <div>
-      signup
-    </div>
-  )
+export default function Loginpage()
+{
+    return <SignUpForm/>
 }
-
-export default page

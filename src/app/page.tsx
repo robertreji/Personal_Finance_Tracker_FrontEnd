@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 export default function Page() {
 const router = useRouter()
   async function logOut(){
-      const res = await axios.get("http://localhost:5001/api/v1/user/logOut",{withCredentials:true})
+      const res = await axios.get("/api/v1/user/logOut",{withCredentials:true})
       router.push("/auth/login")
       }
   return (
