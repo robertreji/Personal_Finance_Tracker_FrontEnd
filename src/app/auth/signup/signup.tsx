@@ -14,17 +14,18 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Loader2 } from "lucide-react"
+import { api } from "@/axois.js"
 
 
 export function SignUpForm() {
 
   const [isLoading,setIsLoading] =useState(false)
+  const [isUnique,setIsUnique] =useState(true)
 
-const router  = useRouter()
+  const router  = useRouter()
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -36,7 +37,7 @@ const router  = useRouter()
   async function onSubmit(values: z.infer<typeof signUpSchema>) {
 
     try {
-        const res = await axios.post("/api/v1/user/signUp",values,{withCredentials:true})
+        const res = await api.post("/v1/user/signUp",values,{withCredentials:true})
         console.log(res.data)
         setIsLoading(prev=>!prev)
         router.push("/auth/login")
@@ -45,7 +46,27 @@ const router  = useRouter()
       console.log(error)
     }
   }
+async function  checkUsername(e)
+{
+  const username = e.target.value;
+  if(username.length<3) {
+  form.clearErrors("username")
+  setIsUnique(false)
+  return 
+  }
 
+
+  const res=await api.post("/v1/user/isUniqueUsername",{username},{withCredentials:true})
+
+  if(res.data.data===false){
+    setIsUnique(false)
+    form.setError("username",{message:"username already taken!"})
+  }else{
+    form.clearErrors("username")
+    setIsUnique(true)
+  }
+  
+}
   return (
 <Form {...form}>
   <form
@@ -60,16 +81,17 @@ const router  = useRouter()
           <FormLabel className="text-lg md:text-4xl text-gray-600">Username</FormLabel>
           <FormControl>
             <Input
-              className=" xl:h-20 rounded-4xl shadow-sm text-base md:text-2xl pl-2 md:pl-6 py-3"
+              className={` ${isUnique?"text-green-600":"text-red-600"}xl:h-20 rounded-4xl shadow-sm text-base md:text-2xl pl-2 md:pl-6 py-3`}
               placeholder="@username"
               {...field}
 
               onChange={e=>{
+              checkUsername(e)
               field.onChange(e);
               }}
             />
           </FormControl>
-          <FormMessage />
+          <FormMessage className={`${isUnique?"text-green-600 ":"text-red-600"}`} />
         </FormItem>
       )}
     />
