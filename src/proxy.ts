@@ -15,11 +15,20 @@ export function proxy(req: NextRequest) {
   if(!accestoken && refreshToken)
   {
     console.log("no acess token but refresh token .............")
+    if(pathname==="/")
+    {
+      return NextResponse.redirect(new URL("/dashboard",req.url))
+    }
     return NextResponse.next();
   }
+
   if(accestoken && (pathname.startsWith("/auth") || pathname ==="/"))
   {
     return NextResponse.redirect(new URL("/dashboard",req.url));
+  }
+
+ if (accestoken && pathname === "/") {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
   return NextResponse.next();
