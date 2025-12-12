@@ -14,10 +14,10 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { LoaderCircleIcon } from "lucide-react"
+import  {api}  from "@/axois.js"
 
 
 export function LoginForm() {
@@ -35,7 +35,7 @@ const router  = useRouter()
   async function onSubmit(values: z.infer<typeof loginSchema>) {
 
     try {
-        const res = await axios.post("/api/v1/user/signIn",values,{withCredentials:true})
+        const res = await api.post("/v1/user/signIn",values,{withCredentials:true})
         console.log(res.data)
         setIsLoading(prev=>!prev)
         router.push("/dashboard")      
