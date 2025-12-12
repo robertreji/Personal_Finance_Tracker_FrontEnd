@@ -30,14 +30,6 @@ export const Navbar = ({Open})=>{
                     src={"/icons/notificaton_icon.png"}
                     className=" object-cover object-center"/>
                 </div>
-                <div className="h-10 w-10 rounded-full  overflow-hidden">
-                    <Image
-                    alt="profile image"
-                    width={48}
-                    height={48}
-                    className="h-full w-full object-cover object-center"
-                    src={"/images/ChatGPT Imagesignup.png"}/>
-                </div>
             </div>
         </div>
     )
